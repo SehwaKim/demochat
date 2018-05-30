@@ -30,10 +30,20 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ChannelUser> channelUsers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserRole> roles = new ArrayList<>();
+
     public void addChanneUser(ChannelUser channelUser){
         channelUsers.add(channelUser);
         if(channelUser.getUser() != this){
             channelUser.setUser(this);
+        }
+    }
+
+    public void addUserRole(UserRole role){
+        this.roles.add(role);
+        if(role.getUser()!=this){
+            role.setUser(this);
         }
     }
 }

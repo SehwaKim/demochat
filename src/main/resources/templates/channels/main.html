@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>test with SockJS</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/sockjs-client/1.0.2/sockjs.js}"></script>
+    <script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+    <script type="text/javascript">
+        var sock = null;
+
+        $(document).ready(function () {
+            sock = new SockJS('/sock');
+
+            sock.onopen = function () {
+                console.log("connected");
+            };
+
+            sock.onmessage = function (e) {
+                showMessage(e.data);
+            };
+
+            sock.onclose = function () {
+                console.log('disconnected');
+            };
+
+            $("#chatInput").keypress(function(e) {
+
+                if (e.keyCode == 13){
+                    sendMsg();
+
+                }
+            });
+        });
+
+        function enter(channelNo) {
+            $("#"+channelNo).show();
+        }
+
+        function sendMsg() {
+            sock.send($("#chatInput").val());
+            $("#chatInput").val("");
+        }
+
+        function disconnect() {
+            sock.close();
+        }
+
+        function showMessage(message) {
+            $("#messages").append(message + '\n');
+
+            var textArea = $('#messages');
+            textArea.scrollTop( textArea[0].scrollHeight - textArea.height() );
+
+        }
+    </script>
+</head>
+<body>
+<div>
+    <div class="container-fluid" style="padding-top: 10px">
+        <div class="row">
+            <div class="col">
+                <div style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-success" onclick="enter('1')">1번 채널 입장</button>
+                </div>
+                <div id="1" style="display: none">
+                    <div>
+                        <div>
+                            <textarea cols="40" rows="20" id="messages_1" readonly></textarea>
+                        </div>
+                        <div>
+                            <input type="text" size="30" id="chatInput_1"/>
+                            <button type="button" class="btn btn-dark btn-sm" onclick="sendMsg(1)">전송</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-dark btn-sm">나가기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-success" onclick="enter('2')">2번 채널 입장</button>
+                </div>
+                <div id="2" style="display: none">
+                    <div>
+                        <div>
+                            <textarea cols="40" rows="20" id="messages_2" readonly></textarea>
+                        </div>
+                        <div>
+                            <input type="text" size="30" id="chatInput_2"/>
+                            <button type="button" class="btn btn-dark btn-sm" onclick="sendMsg(2)">전송</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-dark btn-sm">나가기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-success" onclick="enter('3')">3번 채널 입장</button>
+                </div>
+                <div id="3" style="display: none">
+                    <div>
+                        <div>
+                            <textarea cols="40" rows="20" id="messages_3" readonly></textarea>
+                        </div>
+                        <div>
+                            <input type="text" size="30" id="chatInput_3"/>
+                            <button type="button" class="btn btn-dark btn-sm" onclick="sendMsg(3)">전송</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-dark btn-sm">나가기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div style="padding-bottom: 10px">
+                   <button type="button" class="btn btn-success" onclick="enter('4')">4번 채널 입장</button>
+                </div>
+                <div id="4" style="display: none">
+                    <div>
+                        <div>
+                            <textarea cols="40" rows="20" id="messages_4" readonly></textarea>
+                        </div>
+                        <div>
+                            <input type="text" size="30" id="chatInput_4"/>
+                            <button type="button" class="btn btn-dark btn-sm" onclick="sendMsg(4)">전송</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-dark btn-sm">나가기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
