@@ -36,4 +36,10 @@ public class ChannelUser implements Serializable {
             user.getChannelUsers().add(this);
         }
     }
+    public void setChannel(Channel channel){
+        this.channel = channel;
+        if(!channel.getChannelUsers().contains(this)){
+            channel.getChannelUsers().add(this);
+        }
+    }
 }

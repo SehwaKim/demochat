@@ -18,7 +18,11 @@
             };
 
             sock.onmessage = function (e) {
-                showMessage(JSON.parse(e.data));
+                var data = JSON.parse(e.data);
+                var channelId = data.channelId;
+                if($("#"+channelId).css('display') != 'none'){
+                    showMessage(data);
+                }
             };
 
             sock.onclose = function () {
@@ -59,11 +63,45 @@
         });
 
         function enter(channelId) {
-            $("#"+channelId).show();
+            if($("#"+channelId).css('display') == 'none'){
+                $.ajax({
+                    url: '/api/channels/'+channelId,
+                    method: 'get',
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if(data != null){
+                            for(var i=0;i<data.length;i++){
+                                showMessage(data[i]);
+                            }
+                        }
+                    }
+                });
+
+                $("#"+channelId).show();
+            }
         }
 
         function sendMsg(channelId) {
-            sock.send(JSON.stringify({'channelId' : channelId, 'text' : $("#chatInput_"+channelId).val()}));
+            //sock.send(JSON.stringify({'channelId' : channelId, 'text' : $("#chatInput_"+channelId).val()}));
+
+            var JSONObject= {
+                "channelId" : channelId,
+                "text" : $("#chatInput_"+channelId).val()
+            };
+            var jsonData = JSON.stringify( JSONObject );
+
+            $.ajax({
+                url: '/api/channels/'+channelId+'/messages',
+                method: 'post',
+                data: jsonData,
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    // showMessage(data);
+                }
+            });
+
             $("#chatInput_"+channelId).val("");
         }
 
@@ -71,10 +109,10 @@
             sock.close();
         }
 
-        function showMessage(message) {
-            $('#messages_'+message.channelId).append(message.text + '\n');
+        function showMessage(data) {
+            $('#messages_'+data.channelId).append("[" + data.nickname + "] " + data.text + '\n');
 
-            var textArea = $('#messages_'+message.channelId);
+            var textArea = $('#messages_'+data.channelId);
             textArea.scrollTop( textArea[0].scrollHeight - textArea.height() );
         }
 
@@ -82,7 +120,10 @@
 </head>
 <body>
 <div>
-    <div class="container-fluid" style="padding-top: 10px">
+    <div style="margin: 30px">
+        <button type="button" class="btn btn-dark btn-sm" onclick="location.href='/logout'">로그아웃</button>
+    </div>
+    <div class="container-fluid">
         <div class="row">
             <div class="col">
                 <div style="padding-bottom: 10px">

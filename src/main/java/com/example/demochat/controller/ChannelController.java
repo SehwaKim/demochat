@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChannelController {
     @GetMapping("/")
+    public String channels(){
+
+        return "channels/channels";
+    }
+
+    @GetMapping("/main")
     public String main(){
 
         return "channels/main";

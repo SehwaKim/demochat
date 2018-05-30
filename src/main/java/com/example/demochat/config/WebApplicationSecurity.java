@@ -21,9 +21,12 @@ public class WebApplicationSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/users/login").and().authorizeRequests()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and().formLogin()
                 .loginProcessingUrl("/users/login")
-                .loginPage("/users/login").usernameParameter("email").passwordParameter("password");
+                .loginPage("/users/login").usernameParameter("email").passwordParameter("password")
+                .and().csrf().disable();
     }
 }
