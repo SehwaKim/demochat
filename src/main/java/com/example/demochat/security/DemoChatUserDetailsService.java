@@ -31,6 +31,6 @@ public class DemoChatUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> list = new ArrayList<>();
         user.getRoles().forEach(role -> list.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName())));
 
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), list);
+        return new LoginUserInfo(user.getEmail(), user.getPassword(), list,user.getId(),user.getNickname());
     }
 }

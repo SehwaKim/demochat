@@ -24,6 +24,7 @@ public class WebApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .anyRequest().fullyAuthenticated()
+                .and().headers().frameOptions().disable()
                 .and().formLogin()
                 .loginProcessingUrl("/users/login")
                 .loginPage("/users/login").usernameParameter("email").passwordParameter("password")
